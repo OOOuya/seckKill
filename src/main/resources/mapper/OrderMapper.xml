@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.anrolsp.seckill.dao.OrderDao">
+    <!--useGeneratedKeys 使用数据库的主键生成策略创建id-->
+    <!--keyProperty 表示将生成的主键设置为Order对象的哪个属性-->
+    <insert id="createOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_order values(#{id}, #{sid}, #{name}, #{createDate})
+    </insert>
+</mapper>

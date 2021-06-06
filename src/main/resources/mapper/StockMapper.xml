@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.anrolsp.seckill.dao.StockDao">
+<!--由于在application.yml中配置了别名属性 type-alias-package,因此pojo包下不需要导入路径-->
+<select id="checkStock" parameterType="int" resultType="Stock">
+    select * from stock where id = #{id}
+</select>
+
+<!--<update id="updateSale" parameterType="Stock">
+    update stock set sale = #{sale} where id = #{id}
+</update>-->
+
+    <!--事务+version实现乐观锁,失败的事务返回0-->
+    <update id="updateSale" parameterType="Stock">
+        update stock set sale = sale + 1,version = version + 1
+        where id = #{id} and version = #{version}
+    </update>
+</mapper>
