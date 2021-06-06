@@ -126,7 +126,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: 1forlove
+    password: xxxxxx
 #    似乎是最快的连接池。。
     hikari:
 #      自定义连接池名字
