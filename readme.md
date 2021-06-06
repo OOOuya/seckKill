@@ -1,6 +1,6 @@
 # 秒杀系统
 
-分布式的进阶[(46 封私信 / 80 条消息) 秒杀系统原理 - 搜索结果 - 知乎 (zhihu.com)](https://www.zhihu.com/search?type=content&q=秒杀系统原理)
+分布式的进阶[ 秒杀系统原理 - 搜索结果 - 知乎 (zhihu.com)](https://www.zhihu.com/search?type=content&q=秒杀系统原理)]
 
 ## 1. 秒杀系统
 
@@ -169,9 +169,9 @@ server:
 
 ### 2.3 分析业务
 
-![image-20210507224313156](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210507224313156.png)
+![image-20210507224313156](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210507224313156.png)
 
-#### 定义StockController
+#### 定义StockController 
 
 > ### 接受参数，调用业务创建订单
 
@@ -244,9 +244,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
     /**
      * description: 校验库存、扣除库存、创建订单
-     *
+     * 
       * @Param: null
-     * @return
+     * @return 
      */
     @Override
     public int kill(Integer id) {
@@ -304,9 +304,9 @@ import com.anrolsp.seckill.pojo.Order;
 public interface OrderDao {
     /**
      * description: 通过
-     *
+     * 
       * @Param: null
-     * @return
+     * @return 
      */
     void createOrder(Order order);
 }
@@ -317,7 +317,21 @@ public interface OrderDao {
 #### 配置StockMapper.xml
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        "http://mybatis.org/dtd/mybatis-3-mapper.dtd"><mapper namespace="com.anrolsp.seckill.dao.StockDao">    <!--由于在application.yml中配置了别名属性 type-alias-package,因此pojo包下不需要导入路径-->    <select id="checkStock" parameterType="int" resultType="Stock">        select * from stock where id = #{id}    </select>    <update id="updateSale" parameterType="Stock">        update stock set sale = #{sale} where id = #{id}    </update></mapper>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.anrolsp.seckill.dao.StockDao">
+    <!--由于在application.yml中配置了别名属性 type-alias-package,因此pojo包下不需要导入路径-->
+    <select id="checkStock" parameterType="int" resultType="Stock">
+        select * from stock where id = #{id}
+    </select>
+
+    <update id="updateSale" parameterType="Stock">
+        update stock set sale = #{sale} where id = #{id}
+    </update>
+</mapper>
 ```
 
 #### OrderMapper.xml
@@ -325,7 +339,18 @@ public interface OrderDao {
 > `useGeneratedKeys="true" keyProperty="key"`  keyProperty 表示将生成的主键设置为Order对象的哪个属性
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"        "http://mybatis.org/dtd/mybatis-3-mapper.dtd"><mapper namespace="com.anrolsp.seckill.dao.OrderDao">    <!--useGeneratedKeys 使用数据库的主键生成策略创建id-->    <!--keyProperty 表示将生成的主键设置为Order对象的哪个属性-->    <insert id="createOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">        insert into stock_order values(#{id}, #{sid}, #{name}, #{createDate})    </insert></mapper>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.anrolsp.seckill.dao.OrderDao">
+    <!--useGeneratedKeys 使用数据库的主键生成策略创建id-->
+    <!--keyProperty 表示将生成的主键设置为Order对象的哪个属性-->
+    <insert id="createOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+        insert into stock_order values(#{id}, #{sid}, #{name}, #{createDate})
+    </insert>
+</mapper>
 ```
 
 
@@ -337,7 +362,34 @@ public interface OrderDao {
 #### Stock
 
 ```java
-package com.anrolsp.seckill.pojo;import lombok.AllArgsConstructor;import lombok.Data;import lombok.NoArgsConstructor;import lombok.ToString;import lombok.experimental.Accessors;/** * description: 和数据表stock对应，表示秒杀商品的信息 *  * @Param: null * @return */@Data@AllArgsConstructor@NoArgsConstructor@ToString@Accessors(chain = true)public class Stock {    private Integer id;    private String name;    private Integer count;    private Integer sale;    private Integer version;}
+package com.anrolsp.seckill.pojo;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+
+/**
+ * description: 和数据表stock对应，表示秒杀商品的信息
+ *
+  * @Param: null
+ * @return
+ */
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Accessors(chain = true)
+public class Stock {
+    private Integer id;
+    private String name;
+    private Integer count;
+    private Integer sale;
+    private Integer version;
+}
 ```
 
 
@@ -345,7 +397,27 @@ package com.anrolsp.seckill.pojo;import lombok.AllArgsConstructor;import lombok.
 #### Order
 
 ```java
-package com.anrolsp.seckill.pojo;import lombok.AllArgsConstructor;import lombok.Data;import lombok.NoArgsConstructor;import lombok.ToString;import lombok.experimental.Accessors;import java.util.Date;@Data@AllArgsConstructor@NoArgsConstructor@ToString@Accessors(chain = true)public class Order {    private Integer id;    private Integer sid;    private String name;    private Date createDate;}
+package com.anrolsp.seckill.pojo;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+
+import java.util.Date;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Accessors(chain = true)
+public class Order {
+    private Integer id;
+    private Integer sid;
+    private String name;
+    private Date createDate;
+}
 ```
 
 
@@ -356,34 +428,49 @@ package com.anrolsp.seckill.pojo;import lombok.AllArgsConstructor;import lombok.
 
 1. 出现 `java.sql.SQLException: Unknown system variable 'query_cache_size'` 异常，是mysql版本不对应
 
-
+   
 
    ```mysql
-   mysql> select version()    -> ;+----------+| version() |+----------+| 8.0.18    |+----------+1 row in set (0.03 sec)
+   mysql> select version()
+       -> ;
+   +----------+
+   | version() |
+   +----------+
+   | 8.0.18    |
+   +----------+
+   1 row in set (0.03 sec)
    ```
 
    修改 `pom.xml`依赖
 
    ```xml
-   <!--mysql依赖-->        <dependency>            <groupId>mysql</groupId>            <artifactId>mysql-connector-java</artifactId>            <version>8.0.18</version>        </dependency>
+   <!--mysql依赖-->
+           <dependency>
+               <groupId>mysql</groupId>
+               <artifactId>mysql-connector-java</artifactId>
+               <version>8.0.18</version>
+           </dependency>
    ```
 
-
+   
 
 2. 出现 `Invalid bound statement (not found): com.anrolsp.seckill.dao.StockDao.checkStock`
 
-   发现是mapper映射问题
+   发现是mapper映射问题 
 
    ```
-   <mapper namespace="com.anrolsp.seckill.dao>改成如下<mapper namespace="com.anrolsp.seckill.dao.StockDao">
+   <mapper namespace="com.anrolsp.seckill.dao>改成如下
+   <mapper namespace="com.anrolsp.seckill.dao.StockDao">
    ```
 
-
+   
 
 3. 输入参数格式错误`http://127.0.0.1:8989/stock/kill?1`
 
    ```java
-   @RequestMapping("stock")@GetMapping("kill")public String kill(Integer id)
+   @RequestMapping("stock")
+   @GetMapping("kill")
+   public String kill(Integer id)
    ```
 
    > ### [阅读指南： springmvc的5种传值的方法_灰太狼-CSDN博客_springmvc传参](https://blog.csdn.net/weixin_39220472/article/details/80293888)
@@ -392,7 +479,7 @@ package com.anrolsp.seckill.pojo;import lombok.AllArgsConstructor;import lombok.
 
 ### 2.5 防止超卖结果
 
-![image-20210509130428730](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210509130428730.png)
+![image-20210509130428730](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210509130428730.png)
 
 能看到，业务结果实现了
 
@@ -405,7 +492,13 @@ package com.anrolsp.seckill.pojo;import lombok.AllArgsConstructor;import lombok.
 ### 3.1 安装jmeter
 
 ```markdown
-# 1.下载Jmeter[https://jmeter.apache.org/](https://jmeter.apache.org/)# 2.配置环境变量	path变量中加入 D:\Learning_material\other_materials\Java_materials\apache-jmeter-5.4.1\bin# 3.测试Jmeter是否生效C:\Users\anrol>jmeter -v
+# 1.下载Jmeter
+[https://jmeter.apache.org/](https://jmeter.apache.org/)
+# 2.配置环境变量
+	path变量中加入 D:\Learning_material\other_materials\Java_materials\apache-jmeter-5.4.1\bin
+# 3.测试Jmeter是否生效
+C:\Users\anrol>jmeter -v
+
 ```
 
 
@@ -432,7 +525,7 @@ jmeter -n -t [jmx file] -l [results file] -e -o [Path to web report folder]
 
 ### 3.4 使用悲观锁防止超卖
 
-使用 `synchronised`
+使用 `synchronised` 
 
 ```
 public synchronised int kill()
@@ -452,12 +545,15 @@ public synchronised int kill()
    //@Transactional
    ```
 
-
+   
 
 2. 或者 在业务方法的调用处加入锁，这样线程的范围比事务的范围大
 
    ```java
-   synchronized (this){    int killId = orderService.kill(id);    return "秒杀成功，订单id: " + String.valueOf(killId);}
+   synchronized (this){
+       int killId = orderService.kill(id);
+       return "秒杀成功，订单id: " + String.valueOf(killId);
+   }
    ```
 
 ### 3.5 使用乐观锁解决商品的超卖问题
@@ -467,13 +563,26 @@ public synchronised int kill()
 1. ​	使用 `乐观锁` 改造 `updateSale()`防止 `超卖`问题
 
    ```java
-    private void updateSale(Stock stock){        //stock.setSale(stock.getSale() - 1);        //使用数据库层面的version字段来实现并发修改问题，需要通过版本号和销量来更新销量        //有的线程会无法更新sale（版本号不对），因此要处理无法更新的异常情况，失败的事务返回0        int result = stockDao.updateSale(stock);        if (result == 0){            throw new RuntimeException("商品购买失败！");        }    }
+    private void updateSale(Stock stock){
+   
+           //stock.setSale(stock.getSale() - 1);
+           //使用数据库层面的version字段来实现并发修改问题，需要通过版本号和销量来更新销量
+           //有的线程会无法更新sale（版本号不对），因此要处理无法更新的异常情况，失败的事务返回0
+           int result = stockDao.updateSale(stock);
+           if (result == 0){
+               throw new RuntimeException("商品购买失败！");
+           }
+       }
    ```
 
    对应mybatis数据库语句改造
 
    ```xml
-   <!--事务+version实现乐观锁,失败的事务返回0-->    <update id="updateSale" parameterType="Stock">        update stock set sale = sale + 1 and version = version + 1        where id = #{id} and version = #{version}    </update>
+   <!--事务+version实现乐观锁,失败的事务返回0-->
+       <update id="updateSale" parameterType="Stock">
+           update stock set sale = sale + 1 and version = version + 1
+           where id = #{id} and version = #{version}
+       </update>
    ```
 
    其他方法无需改造
@@ -510,11 +619,11 @@ public synchronised int kill()
 
 常用的限流算法有 `令牌桶` 和 `漏桶（漏斗算法）` ， Google中的Guava中的RateLimiter就是令牌桶控制算法。
 
-![image-20210511094916133](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210511094916133.png)
+![image-20210511094916133](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210511094916133.png)
 
 ### 4.3 令牌桶和漏斗算法
 
-<img src="C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210511095021315.png" alt="image-20210511095021315" style="zoom: 150%;" />
+<img src="https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210511094916133.png" alt="image-20210511095021315" style="zoom: 150%;" />
 
 令牌桶算法更像一个自旋，当拿不到令牌的时候，就会等待，直到拿到令牌
 
@@ -523,21 +632,45 @@ public synchronised int kill()
 1. **导入依赖**
 
    ```xml
-   <!--拥有令牌桶算法的组件--><dependency>    <groupId>com.google.guava</groupId>    <artifactId>guava</artifactId>    <version>28.2-jre</version></dependency>
+   <!--拥有令牌桶算法的组件-->
+   <dependency>
+       <groupId>com.google.guava</groupId>
+       <artifactId>guava</artifactId>
+       <version>28.2-jre</version>
+   </dependency>
    ```
 
-
+   
 
 2. **令牌桶算法的基本操作**
 
    结合 `lombok` 的 `@log4j`
 
    ```java
-   private RateLimiter r = RateLimiter.create(10);//创建了容量为10的令牌桶r.acquire();//1.第一种：请求获取token令牌，没有拿到自旋等待r.tryAquire(5, timeUnit.SECONDS); //第二种情况，超时等待，在5秒内等待获取令牌，如果超过5秒，请求被抛弃，无法处理后续逻辑。
+   private RateLimiter r = RateLimiter.create(10);//创建了容量为10的令牌桶
+   r.acquire();//1.第一种：请求获取token令牌，没有拿到自旋等待
+   r.tryAquire(5, timeUnit.SECONDS); //第二种情况，超时等待，在5秒内等待获取令牌，如果超过5秒，请求被抛弃，无法处理后续逻辑。
    ```
 
    ```java
-   //令牌桶实例    private RateLimiter rateLimiter = RateLimiter.create(40);    /**     * description: 令牌桶的测试方法     *     * @Param: 商品id     * @return     */    @RequestMapping("sale")    public String sale(Integer id){        //log.info("等待的时间" + rateLimiter.acquire());        if (!rateLimiter.tryAcquire(2, TimeUnit.SECONDS)){            System.out.println("当前请求被限流，无法处理后续秒杀逻辑..");            return "抢购失败";        }        System.out.println("处理业务....");        return "抢购成功";    }
+   //令牌桶实例
+       private RateLimiter rateLimiter = RateLimiter.create(40);
+       /**
+        * description: 令牌桶的测试方法
+        *
+        * @Param: 商品id
+        * @return
+        */
+       @RequestMapping("sale")
+       public String sale(Integer id){
+           //log.info("等待的时间" + rateLimiter.acquire());
+           if (!rateLimiter.tryAcquire(2, TimeUnit.SECONDS)){
+               System.out.println("当前请求被限流，无法处理后续秒杀逻辑..");
+               return "抢购失败";
+           }
+           System.out.println("处理业务....");
+           return "抢购成功";
+       }
    ```
 
 ### 4.5 使用令牌桶实现乐观锁+限流
@@ -591,16 +724,35 @@ spring-boot-starter-data-redis
 `StockServiceImpl`
 
 ```java
-    @Autowired    private StringRedisTemplate stringRedisTemplate;    /**     * description: 校验库存、扣除库存、创建订单     *       * @Param: 商品id     * @return 订单id     */    @Override    public int kill(Integer id) {        if (!stringRedisTemplate.hasKey("kill"+ id)){            throw new RuntimeException("秒杀时间已过！");        }        //校验库存        Stock stock = checkStock(id);        //扣除库存        updateSale(stock);        //创建订单        return createOrder(stock);    }
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+    /**
+     * description: 校验库存、扣除库存、创建订单
+     * 
+      * @Param: 商品id
+     * @return 订单id
+     */
+    @Override
+    public int kill(Integer id) {
+        if (!stringRedisTemplate.hasKey("kill"+ id)){
+            throw new RuntimeException("秒杀时间已过！");
+        }
+        //校验库存
+        Stock stock = checkStock(id);
+        //扣除库存
+        updateSale(stock);
+        //创建订单
+        return createOrder(stock);
+    }
 ```
 
 1. 使用jmeter测试
 
-   ![image-20210512195635412](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210512195635412.png)
+   ![image-20210512195635412](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210512195635412.png)
 
 2. 结果
 
-   ![image-20210512200941104](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210512200941104.png)
+   ![image-20210512200941104](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210512200941104.png)
 
 ## 6. 用户接口隐藏
 
@@ -610,7 +762,7 @@ spring-boot-starter-data-redis
 
 **具体做法**：
 
-![image-20210513200518835](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210513200518835.png)
+![image-20210606153048857](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210606153048857.png)
 
 1. 点击秒杀按钮，通过`用户id和商品id+随机salt`生成`md5验证值`，`用户id和商品id`作为限时key存入Redis，value是生成的md5
 2. 用户点击下单按钮，通过生成的 `md5`和Redis中存入的 `md5`匹配。不匹配抛弃请求。
@@ -621,16 +773,28 @@ spring-boot-starter-data-redis
 
 ### 6.1 新增User表
 
-`set foreign_key_checks=1`什么意思？
+`set foreign_key_checks=1`
 
-`StringRedisTemplate.opsForValue()`什么意思？
+`StringRedisTemplate.opsForValue()`
 
 `set names utf8mb4` 设置变量（各种字符集）为 `utf8mb4`格式
 
-![image-20210513201222927](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210513201222927.png)
+![image-20210606153130781](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210606153130781.png)
 
 ```mysql
--- ---------------------------- Table structure for users-- --------------------------set names utf8mb4; #支持表情符号set FOREIGN_KEY_CHECKS = 0;drop table if exists `user`;create table `user`(`id` int unsigned not null auto_increment,`name` varchar(20) not null default "" comment "用户名",`password` varchar(40) not null default "" comment "用户密码",primary key(id) ) engine = INNODB DEFAULT CHARSET=utf8; set FOREIGN_KEY_CHECKS = 1;#开启外键约束
+-- --------------------------
+-- Table structure for users
+-- --------------------------
+set names utf8mb4; #支持表情符号
+set FOREIGN_KEY_CHECKS = 0;
+drop table if exists `user`;
+create table `user`(
+`id` int unsigned not null auto_increment,
+`name` varchar(20) not null default "" comment "用户名",
+`password` varchar(40) not null default "" comment "用户密码",
+primary key(id)
+ ) engine = INNODB DEFAULT CHARSET=utf8;
+ set FOREIGN_KEY_CHECKS = 1;#开启外键约束
 ```
 
 
@@ -640,15 +804,56 @@ spring-boot-starter-data-redis
 1. `controller` 调用`service`的`md5`
 
    ```java
-    /**     * description: 用户点击秒杀按钮，根据用户id和商品id生成md5     *     * @Param: 商品id，用户sid     * @return md5加密     */    @GetMapping("md5")    public String md5(Integer id, Integer sid){        String md5;        try{            //getMd5生成失败抛出异常            md5 = orderService.getMd5(id, sid);        }catch(Exception e){            e.printStackTrace();            return "md5获取失败!" + e.getMessage();        }        return "获取md5信息："+md5;    }
+    /**
+        * description: 用户点击秒杀按钮，根据用户id和商品id生成md5
+        *
+        * @Param: 商品id，用户sid
+        * @return md5加密
+        */
+       @GetMapping("md5")
+       public String md5(Integer id, Integer sid){
+           String md5;
+           try{
+               //getMd5生成失败抛出异常
+               md5 = orderService.getMd5(id, sid);
+           }catch(Exception e){
+               e.printStackTrace();
+               return "md5获取失败!" + e.getMessage();
+           }
+           return "获取md5信息："+md5;
+       }
    ```
 
+   
 
-
-2. `stockImpl`定义 `md5()`生成md5方法
+2. `stockImpl`定义 `md5()`生成md5方法 
 
    ```java
-    /**     * description: 用户点击秒杀按钮，根据用户id和商品id生成md5     *     * @Param: 商品id，用户sid     * @return md5加密     */    public String getMd5(Integer id, Integer sid){        //验证用户的合法性        User user = userDao.getUserById(sid);        if (user == null)            throw new RuntimeException("用户不存在！");        log.info("用户信息:[{}]", user.toString());        Stock stock = stockDao.checkStock(id);        if (stock == null)            throw new RuntimeException("商品不存在!");        log.info("商品信息:[{}]", stock.toString());        //设置md5Key作为redis的key        String key = "KEY_"+ id + "_" + sid;        //生成md5,!@#*&是salt，防止被轻易破解        String md5Value = DigestUtils.md5DigestAsHex((key+"!@#*&").getBytes());        //存入Redis中        stringRedisTemplate.opsForValue().set(key, md5Value, 120, TimeUnit.SECONDS);        log.info("md5写入[{}] [{}]", key, md5Value);        return "md5:" + key;    }
+    /**
+        * description: 用户点击秒杀按钮，根据用户id和商品id生成md5
+        *
+        * @Param: 商品id，用户sid
+        * @return md5加密
+        */
+       public String getMd5(Integer id, Integer sid){
+           //验证用户的合法性
+           User user = userDao.getUserById(sid);
+           if (user == null)
+               throw new RuntimeException("用户不存在！");
+           log.info("用户信息:[{}]", user.toString());
+           Stock stock = stockDao.checkStock(id);
+           if (stock == null)
+               throw new RuntimeException("商品不存在!");
+           log.info("商品信息:[{}]", stock.toString());
+           //设置md5Key作为redis的key
+           String key = "KEY_"+ id + "_" + sid;
+           //生成md5,!@#*&是salt，防止被轻易破解
+           String md5Value = DigestUtils.md5DigestAsHex((key+"!@#*&").getBytes());
+           //存入Redis中
+           stringRedisTemplate.opsForValue().set(key, md5Value, 120, TimeUnit.SECONDS);
+           log.info("md5写入[{}] [{}]", key, md5Value);
+           return "md5:" + key;
+       }
    ```
 
 3. 定义`user`
@@ -656,19 +861,33 @@ spring-boot-starter-data-redis
    需要user 来存放从数据库中查询的返回的user对象
 
    ```java
-   @Slf4j@Datapublic class User {    int id;    String name;    String password;}
+   @Slf4j
+   @Data
+   public class User {
+       int id;
+       String name;
+       String password;
+   }
    ```
 
 4. `定义userDao`
 
    ```java
-   @Repositorypublic interface UserDao {    User getUserById(Integer id);}
+   @Repository
+   public interface UserDao {
+   
+       User getUserById(Integer id);
+   }
    ```
 
 5. `userMapper.xml`定义findByid方法实现
 
    ```xml
-   <mapper namespace="com.anrolsp.seckill.dao.UserDao">    <select id="getUserById" parameterType="int" resultType="User">        select * from user where id = #{id}    </select></mapper>
+   <mapper namespace="com.anrolsp.seckill.dao.UserDao">
+       <select id="getUserById" parameterType="int" resultType="User">
+           select * from user where id = #{id}
+       </select>
+   </mapper>
    ```
 
 ### 6.3 校验md5
@@ -676,13 +895,49 @@ spring-boot-starter-data-redis
 1. `controller`调用`service`秒杀方法
 
    ```java
-   /** * description: 通过 乐观锁+接口限流+限时+隐藏接口 实现秒杀 * @param 商品id 用户id md5 * @return String类型的商品id */@GetMapping("killtokenmd5")public String killtokenmd5(Integer id, Integer sid, String md5){    if (!rateLimiter.tryAcquire(3, TimeUnit.SECONDS)){        throw new RuntimeException("秒杀被限流！请重试！");    }    System.out.println("秒杀商品的id： " + id);    try{        int killId = orderService.kill(id,sid, md5);        return "秒杀成功，订单id: " + String.valueOf(killId);    }catch(Exception e){        e.printStackTrace();        return e.getMessage();    }}
+   /**
+    * description: 通过 乐观锁+接口限流+限时+隐藏接口 实现秒杀
+    * @param 商品id 用户id md5
+    * @return String类型的商品id
+    */
+   @GetMapping("killtokenmd5")
+   public String killtokenmd5(Integer id, Integer sid, String md5){
+       if (!rateLimiter.tryAcquire(3, TimeUnit.SECONDS)){
+           throw new RuntimeException("秒杀被限流！请重试！");
+       }
+       System.out.println("秒杀商品的id： " + id);
+       try{
+           int killId = orderService.kill(id,sid, md5);
+           return "秒杀成功，订单id: " + String.valueOf(killId);
+       }catch(Exception e){
+           e.printStackTrace();
+           return e.getMessage();
+       }
+   }
    ```
 
 2. 秒杀实现前校验md5
 
    ```java
-     /**     * description: 判断是否超时校验md5、校验库存、扣除库存、创建订单     *     * @Param: 商品id     * @return 订单id     */    @Override    public int kill(Integer id, Integer sid, String md5) {        //校验md5        String md5Key = "KEY_"+ id + "_" + sid;        if (md5 == null || !md5.equals(stringRedisTemplate.opsForValue().get(md5Key)))            throw new RuntimeException("不存在对应的md5！");        //校验库存        Stock stock = checkStock(id);        //扣除库存        updateSale(stock);        //创建订单        return createOrder(stock);    }
+     /**
+        * description: 判断是否超时校验md5、校验库存、扣除库存、创建订单
+        *
+        * @Param: 商品id
+        * @return 订单id
+        */
+       @Override
+       public int kill(Integer id, Integer sid, String md5) {
+           //校验md5
+           String md5Key = "KEY_"+ id + "_" + sid;
+           if (md5 == null || !md5.equals(stringRedisTemplate.opsForValue().get(md5Key)))
+               throw new RuntimeException("不存在对应的md5！");
+           //校验库存
+           Stock stock = checkStock(id);
+           //扣除库存
+           updateSale(stock);
+           //创建订单
+           return createOrder(stock);
+       }
    ```
 
 加入其他人同样进行md5加密，能获取到对应的md5吗？
@@ -693,9 +948,9 @@ spring-boot-starter-data-redis
 
 结果
 
-![image-20210514090712633](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210514090712633.png)
+![image-20210514090712633](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210514090712633.png)
 
-![image-20210514090701573](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210514090701573.png)
+![image-20210514090701573](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210514090701573.png)
 
 ## 7.  单用户请求访问限制频率
 
@@ -710,7 +965,33 @@ spring-boot-starter-data-redis
 1. 在 `controller`的接口限流后，秒杀方法前加入判断逻辑
 
    ```java
-   @Autowiredprivate UserService userService;/** * description: 通过 乐观锁+接口限流+限时+隐藏接口+频率限制 实现秒杀 * @param 商品id 用户id md5 * @return String类型的商品id */@GetMapping("killtokenmd5limit")public String killtokenmd5limit(Integer id, Integer sid, String md5){    if (!rateLimiter.tryAcquire(3, TimeUnit.SECONDS)){        throw new RuntimeException("秒杀被限流！请重试！");    }    System.out.println("秒杀商品的id： " + id);    //进行单用户访问限制    int userCount = userService.getUserCount(sid);    log.info("用户到目前位置的访问次数[{}]", userCount);    if (userCount > 10){        return "购买失败，超过访问频率限制！";    }    try{        int killId = orderService.kill(id,sid, md5);        return "秒杀成功，订单id: " + String.valueOf(killId);    }catch(Exception e){        e.printStackTrace();        return e.getMessage();    }}
+   @Autowired
+   private UserService userService;
+   /**
+    * description: 通过 乐观锁+接口限流+限时+隐藏接口+频率限制 实现秒杀
+    * @param 商品id 用户id md5
+    * @return String类型的商品id
+    */
+   @GetMapping("killtokenmd5limit")
+   public String killtokenmd5limit(Integer id, Integer sid, String md5){
+       if (!rateLimiter.tryAcquire(3, TimeUnit.SECONDS)){
+           throw new RuntimeException("秒杀被限流！请重试！");
+       }
+       System.out.println("秒杀商品的id： " + id);
+       //进行单用户访问限制
+       int userCount = userService.getUserCount(sid);
+       log.info("用户到目前位置的访问次数[{}]", userCount);
+       if (userCount > 10){
+           return "购买失败，超过访问频率限制！";
+       }
+       try{
+           int killId = orderService.kill(id,sid, md5);
+           return "秒杀成功，订单id: " + String.valueOf(killId);
+       }catch(Exception e){
+           e.printStackTrace();
+           return e.getMessage();
+       }
+   }
    ```
 
 2. `userService、userServiceImpl`实现访问次数逻辑
@@ -722,13 +1003,26 @@ spring-boot-starter-data-redis
    4. 存在：调用redis自增函数
 
    ```java
-   @Autowiredprivate StringRedisTemplate stringRedisTemplate;@Overridepublic int getUserCount(Integer id) {    //生成rediskey    String limitKey = "KEY_" + id+"COUNT";    String userCount = stringRedisTemplate.opsForValue().get(limitKey);    if (userCount == null){        stringRedisTemplate.opsForValue().set(limitKey, "1", 3600, TimeUnit.SECONDS);    }else        stringRedisTemplate.boundValueOps(limitKey).increment();    return Integer.parseInt(userCount);}
+   @Autowired
+   private StringRedisTemplate stringRedisTemplate;
+   
+   @Override
+   public int getUserCount(Integer id) {
+       //生成rediskey
+       String limitKey = "KEY_" + id+"COUNT";
+       String userCount = stringRedisTemplate.opsForValue().get(limitKey);
+       if (userCount == null){
+           stringRedisTemplate.opsForValue().set(limitKey, "1", 3600, TimeUnit.SECONDS);
+       }else
+           stringRedisTemplate.boundValueOps(limitKey).increment();
+       return Integer.parseInt(userCount);
+   }
    ```
 
    > 需要用到 `getUserCount`吗？不需要
 
-
+   
 
 3. 结果：限制了用户的访问请求次数
 
-   ![image-20210514095753208](C:\Users\anrol\AppData\Roaming\Typora\typora-user-images\image-20210514095753208.png)
+   ![image-20210514095753208](https://raw.githubusercontent.com/OOOuya/cloudImg/master/img2/image-20210514095753208.png)
